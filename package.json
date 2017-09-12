@@ -1,0 +1,30 @@
+{
+  "name": "hexo-lazyload",
+  "version": "1.0.2",
+  "description": "use IntersectionObserver api to improve lazyload performance",
+  "main": "index.js",
+  "scripts": {
+    "eslint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Robin-front/hexo-lazyload.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Robin-front/hexo-lazyload/issues/new"
+  },
+  "keywords": [
+    "hexo",
+    "hexo plugin",
+    "image lazyload",
+    "IntersectionObserver"
+  ],
+  "author": "robin",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "eslint": "^4.3.0",
+    "mkdirp": "^0.5.1",
+    "uglify-js": "^3.0.27"
+  }
+}
