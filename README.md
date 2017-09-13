@@ -45,8 +45,8 @@ $ hexo clean && hexo g
 
 ## TODO
 
-[x] lazy-load
-[ ] medium effect
+- [x] lazy-load
+- [ ] medium effect
 
 # 简体中文
 
@@ -94,5 +94,5 @@ $ hexo clean && hexo g
 
 ## TODO
 
-[x] lazy-load
-[ ] medium effect
+- [x] lazy-load
+- [ ] medium effect
