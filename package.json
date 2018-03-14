@@ -4,7 +4,8 @@
   "description": "use IntersectionObserver api to improve lazyload performance",
   "main": "index.js",
   "scripts": {
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "uglify": "uglifyjs lib/lazyload.intersectionObserver.js -o lib/lazyload.intersectionObserver.min.js"
   },
   "repository": {
     "type": "git",
@@ -23,9 +24,11 @@
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "eslint": "^4.3.0",
     "gm": "^1.23.1",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^0.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.3.0",
     "uglify-js": "^3.0.27"
   }
 }
