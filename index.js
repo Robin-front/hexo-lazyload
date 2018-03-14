@@ -17,7 +17,7 @@ const defaultImagePath = path.resolve(__dirname, './lib/default-image.json');
 
 lazyload.loadingImg = lazyload.loadingImg || '/js/lazyload-plugin/loading.svg';
 
-const addScript = (src, content) => content + `<script src="${src}"></script>`
+const addScript = (src, content) => content + `<script src="${src}" async></script>`
 const addStyle = (src, content) => content + `<link rel="stylesheet" href="${src}">`
 
 const existFile = path => new Promise((resolve, reject) => fs.exists(path, (exists) => resolve(exists)))
@@ -56,11 +56,15 @@ const transformImg = s => {
   $img.attr('src', lazyload.loadingImg);
   $img.attr('data-original', attr);
   $img.attr('data-thumb', path.join('/images/thumb', getFilename(attr)));
+  $img.css('position', 'absolute');
+  $img.css('z-index', '1');
+  const parent = $('<div style="position:relative;"></div>')
+  $img.wrap(parent);
   generateThumb(attr);
-  return $.html('img');
+  return $.html();
 }
 
-const generateThumb = originPath => {
+const generateThumb = (originPath) => {
   const filename = getFilename(originPath);
   const thumbTargetFolder = path.resolve(hexo.base_dir, 'public/images/thumb');
   const targetPath = path.resolve(thumbTargetFolder, filename);
