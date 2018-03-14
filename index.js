@@ -60,6 +60,8 @@ const transformImg = s => {
   $img.attr('data-original', attr);
   $img.attr('data-thumb', path.join('/images/thumb', getFilename(attr)));
   $img.css('position', 'absolute');
+  $img.css('left', '0');
+  $img.css('right', '0');
   $img.css('z-index', '1');
   const parent = $('<div style="position:relative;"></div>')
   $img.wrap(parent);
