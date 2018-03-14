@@ -71,15 +71,17 @@ const generateThumb = (originPath) => {
   const filename = getFilename(originPath);
   const thumbTargetFolder = path.resolve(hexo.base_dir, 'public/images/thumb');
   const targetPath = path.resolve(thumbTargetFolder, filename);
-  gm(getOriginImage(originPath))
-    .thumbnail(200, 200)
-    .write(targetPath, function (err) {
-      if (err) {
-        console.error('fail to generate thumb of ' + filename, err);
-      } else {
-        console.log(filename + ' generate thumb success to ' + targetPath);
-      }
-    });
+  existFile(targetPath).then(exists => {
+    exists ? null : gm(getOriginImage(originPath))
+      .thumbnail(200, 200)
+      .write(targetPath, function (err) {
+        if (err) {
+          console.error('fail to generate thumb of ' + filename, err);
+        } else {
+          console.log(filename + ' generate thumb success to ' + targetPath);
+        }
+      });
+  });
 }
 
 const getOriginImage = originPath => {
