@@ -65,7 +65,7 @@ const generateThumb = originPath => {
   const thumbTargetFolder = path.resolve(hexo.base_dir, 'public/images/thumb');
   const targetPath = path.resolve(thumbTargetFolder, filename);
   gm(getOriginImage(originPath))
-    .thumbnail(300, 300)
+    .thumbnail(200, 200)
     .write(targetPath, function (err) {
       if (err) {
         console.error('fail to generate thumb of ' + filename, err);
@@ -85,7 +85,7 @@ const getOriginImage = originPath => {
 
 const isRemotePath = str => str.indexOf('http') !== -1;
 
-const getFilename = path => path.match(/\/([\w-]+\.(?:png|jpg|jpeg|gif|bmp))$/i)[1];
+const getFilename = path => path.match(/\/([\w-]+\.(?:png|jpg|jpeg|gif|bmp))/i)[1];
 
 const lazyloadPlugin = data => {
   const libPath = path.resolve(__dirname, 'lib');
