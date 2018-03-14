@@ -53,6 +53,9 @@ const transformImg = s => {
   const $ = cheerio.load(s);
   const $img = typeof s === 'string' ? $('img') : s;
   const attr = $img.attr('src');
+  if (!isImg(attr)) {
+    return s;
+  }
   $img.attr('src', lazyload.loadingImg);
   $img.attr('data-original', attr);
   $img.attr('data-thumb', path.join('/images/thumb', getFilename(attr)));
@@ -89,7 +92,8 @@ const getOriginImage = originPath => {
 
 const isRemotePath = str => str.indexOf('http') !== -1;
 
-const getFilename = path => path.match(/\/([\w-]+\.(?:png|jpg|jpeg|gif|bmp))/i)[1];
+const isImg = str => /\/([^/]+\.(?:png|jpg|jpeg|gif|bmp))/i.test(str);
+const getFilename = path => path.match(/\/([^/]+\.(?:png|jpg|jpeg|gif|bmp))/i)[1];
 
 const lazyloadPlugin = data => {
   const libPath = path.resolve(__dirname, 'lib');
