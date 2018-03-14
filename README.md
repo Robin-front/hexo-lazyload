@@ -3,7 +3,16 @@
 **hexo-lazyload** is a hexo plugin which is use IntersectionObserver api to improve the performance of lazy-load images.
 
 
-## Install
+## Getting started
+
+This package rely on `gm` to generate thumbnail, so first download and install [GraphicsMagick](http://www.graphicsmagick.org/) or [ImageMagick](http://www.imagemagick.org/). In Mac OS X, you can simply use Homebrew and do:
+
+```bash
+brew install imagemagick
+brew install graphicsmagick
+```
+
+then, install this package:
 
 ```bash
 $ npm install hexo-lazyload --save
@@ -54,6 +63,14 @@ $ hexo clean && hexo g
 
 ## 安装
 
+这个包依赖 `gm` 来生成缩略图，所以请先安装相关依赖 [GraphicsMagick](http://www.graphicsmagick.org/) or [ImageMagick](http://www.imagemagick.org/)。如果是 mac,可以使用以下命令：
+
+```bash
+brew install imagemagick
+brew install graphicsmagick
+```
+然后，安装本 npm 包：
+
 ```bash
 $ npm install hexo-lazyload --save
 
@@ -70,7 +87,7 @@ $ yarn add hexo-lazyload
 lazyload:
   enable: true
   # className: #可选 e.g. .J-lazyload-img
-  # loadingImg: #可选 eg. ./images/loading.png
+  # loadingImg: #可选 eg. ./images/loading.png（弃用）
 ```
 
 **loadingImg**
@@ -95,4 +112,4 @@ $ hexo clean && hexo g
 ## TODO
 
 - [x] lazy-load
-- [ ] medium effect
+- [x] medium effect
