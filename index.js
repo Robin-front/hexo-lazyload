@@ -17,7 +17,7 @@ const defaultImagePath = path.resolve(__dirname, './lib/default-image.json');
 
 lazyload.loadingImg = lazyload.loadingImg || '/js/lazyload-plugin/loading.svg';
 
-const addScript = (src, content) => content + `<script src="${src}" async></script>`
+const addScript = (src, content) => content + `<script src="${src}" async type="text/javascript" charset="utf-8"></script>`
 const addStyle = (src, content) => content + `<link rel="stylesheet" href="${src}">`
 
 const existFile = path => new Promise((resolve, reject) => fs.exists(path, (exists) => resolve(exists)))
