@@ -2,6 +2,12 @@
 
 **hexo-lazyload** is a hexo plugin which is use IntersectionObserver api to improve the performance of lazy-load images.
 
+feature:
+
+- auto generate thumbnail（include remote image and local image）
+- use IntersectionObserver api(with polyfill if browsers not support) for lazyload
+- medium effect
+
 
 ## Getting started
 
@@ -55,11 +61,20 @@ $ hexo clean && hexo g
 ## TODO
 
 - [x] lazy-load
-- [ ] medium effect
+- [x] medium effect
+- [x] generate thumbnail(local & remote)
+- [ ] hash thumbnail name
+- [ ] custom thumbnail path
 
 # 简体中文
 
 **hexo-lazyload** 是一个 hexo 插件，使用 IntersectionObserver API， 并附加了 polyfill, 在现代浏览器的环境下，要比传统 lazyload 写法具有更高性能。
+
+特点：
+
+- 自动生成缩略图（150x150）(包括远程图片和本地图片)
+- 使用 IntersectionObserver API（自带polyfill）实现 lazyload
+- medium effect
 
 ## 安装
 
@@ -87,7 +102,7 @@ $ yarn add hexo-lazyload
 lazyload:
   enable: true
   # className: #可选 e.g. .J-lazyload-img
-  # loadingImg: #可选 eg. ./images/loading.png（弃用）
+  # loadingImg: #可选 eg. ./images/loading.png
 ```
 
 **loadingImg**
@@ -113,3 +128,6 @@ $ hexo clean && hexo g
 
 - [x] lazy-load
 - [x] medium effect
+- [x] generate thumbnail(local & remote)
+- [ ] hash thumbnail name
+- [ ] custom thumbnail path
