@@ -7,6 +7,7 @@ const gm = require('gm');
 const request = require('request');
 const crypto = require('crypto');
 const url = require('url');
+const async = require('async');
 
 const config = hexo.config;
 const lazyload = config.lazyload;
@@ -28,6 +29,7 @@ const addStyle = (src, content) => content + `<link rel="stylesheet" href="${src
 
 const isRemotePath = str => str.indexOf('http') !== -1;
 
+const isImg = str => /\/([^/]+\.(?:png|jpg|jpeg|gif|bmp))/i.test(str);
 const getHashFileName = fpath => {
   const extname = path.extname(url.parse(fpath).pathname);
   const hash = crypto.createHash('md5').update(fpath).digest("hex");
@@ -71,10 +73,17 @@ const transformHTML = source => {
   }
 };
 
+let waitForThumb = [];
 const transformImg = s => {
   const $ = cheerio.load(s);
   const $img = typeof s === 'string' ? $('img') : s;
   const attr = $img.attr('src');
+  if (!isImg(attr)) {
+    return s;
+  }
+  if (waitForThumb.indexOf(attr) === -1) {
+    waitForThumb.push(attr);
+  }
   $img.attr('src', loadingImgPath);
   $img.attr('data-original', attr);
   $img.attr('data-thumb', path.join('/', thumbPath, getHashFileName(attr)));
@@ -88,25 +97,10 @@ const transformImg = s => {
   return $.html();
 }
 
-const iterationImages = async (source) => {
-  const className = lazyload.className;
-  let srcArr;
-  if (className) {
-    const $ = cheerio.load(source);
-    srcArr = $(className).map($img => $img.attr('src'));
-  } else {
-    srcArr = source.match(/<img([^>]+)?>/igm)||[];
-    srcArr = srcArr.map(s => {
-      const $ = cheerio.load(s);
-      const attr = $('img').attr('src');
-      return attr;
-    });
-  }
-  return await Promise.all(srcArr.map(generateThumb));
-}
-
 const generateThumb = async (originPath) => {
-  if (!originPath) { return false; }
+  if (!originPath || !isImg(originPath)) {
+    return false;
+  }
   const hashFileName = getHashFileName(originPath);
   const targetPath = path.resolve(thumbTargetFolder, hashFileName);
   const exists = await existFile(targetPath);
@@ -115,7 +109,7 @@ const generateThumb = async (originPath) => {
   };
 }
 
-const gmAsync = (originPath, targetPath) => new Promise((resolve, reject) => {
+const gmAsync = async (originPath, targetPath) => await new Promise((resolve, reject) => {
   gm(getOriginImage(originPath))
     .thumbnail(200, 200)
     .quality(8)
@@ -143,12 +137,22 @@ hexo.extend.filter.register('before_post_render', async function (data) {
   await mkdir(thumbTargetFolder);
 });
 
-hexo.extend.filter.register('after_post_render', async function(data) {
+hexo.extend.filter.register('after_post_render', function (data) {
   copyAssets();
-  log('start processing thumb of ' + data.source);
-  await iterationImages(data.content);
   data.content = addScript('/js/lazyload-plugin/lazyload.intersectionObserver.min.js', data.content);
   data.content = transformHTML(data.content);
-  log('success processed thumb of ' + data.source)
   return data;
+});
+
+hexo.extend.filter.register('after_generate', async function loopPipe() {
+  log('start processing thumb');
+  return await async.mapLimit(waitForThumb, 5, async function (url) {
+    const response = await generateThumb(url);
+    return response;
+  }, (err) => {
+    if (err) throw err;
+    // results is now an array of the response bodies
+    // console.log('results', results)
+    log('All thumb process successed !');
+  });
 });
