@@ -6,3 +6,4 @@ categories: [sample]
 ---
 
 test
+![speed improvements in npm@5](https://cdn-images-1.medium.com/max/800/0*K1Wb1ERhtAHLRG0m.)

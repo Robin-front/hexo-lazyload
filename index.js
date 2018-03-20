@@ -28,8 +28,6 @@ const addStyle = (src, content) => content + `<link rel="stylesheet" href="${src
 
 const isRemotePath = str => str.indexOf('http') !== -1;
 
-const isImg = str => /\/([^/]+\.(?:png|jpg|jpeg|gif|bmp))/i.test(str);
-const getFilename = path => path.match(/\/([^/]+\.(?:png|jpg|jpeg|gif|bmp))/i)[1];
 const getHashFileName = fpath => {
   const extname = path.extname(url.parse(fpath).pathname);
   const hash = crypto.createHash('md5').update(fpath).digest("hex");
@@ -77,9 +75,6 @@ const transformImg = s => {
   const $ = cheerio.load(s);
   const $img = typeof s === 'string' ? $('img') : s;
   const attr = $img.attr('src');
-  if (!isImg(attr)) {
-    return s;
-  }
   $img.attr('src', loadingImgPath);
   $img.attr('data-original', attr);
   $img.attr('data-thumb', path.join('/', thumbPath, getHashFileName(attr)));
@@ -121,17 +116,16 @@ const generateThumb = async (originPath) => {
 }
 
 const gmAsync = (originPath, targetPath) => new Promise((resolve, reject) => {
-  const filename = getFilename(originPath);
   gm(getOriginImage(originPath))
     .thumbnail(200, 200)
     .quality(8)
     .write(targetPath, function (err, res) {
       if (err) {
-        error('gm: ' + 'fail to generate thumb of ' + filename);
-        debug(err);
+        error('gm: ' + 'fail to generate thumb of ' + originPath);
+        error(err);
         reject(err);
       } else {
-        log('gm: ' + filename + ' generate thumb successed');
+        log('gm: ' + originPath + ' generate thumb successed');
         resolve(targetPath);
       }
     });
