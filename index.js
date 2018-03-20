@@ -23,7 +23,7 @@ const assetsList = ['lazyload.intersectionObserver.min.js', 'loading.svg'];
 const error = err => hexo.log.error(err);
 const log = err => hexo.log.info(err);
 const debug = err => hexo.log.debug(err);
-const addScript = (src, content) => content + `<script type="text/javascript" charset="utf-8">(function (){var s = document.createElement( 'script' ); s.setAttribute( 'src', '${src}' ); document.body.appendChild( s );})();</script>`
+const addScript = (src, content) => content + `<script type="text/javascript" charset="utf-8">!function(){var r=document.querySelectorAll("script");if(Array.prototype.some.call(r,function(r){return r.src&&-1!=r.src.indexOf("${src}")}))return!1;var e=document.createElement("script");e.setAttribute("src","${src}"),document.body.appendChild(e)}();</script>`
 const addStyle = (src, content) => content + `<link rel="stylesheet" href="${src}">`
 
 const isRemotePath = str => str.indexOf('http') !== -1;
