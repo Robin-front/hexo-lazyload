@@ -16,6 +16,7 @@ if (!lazyload || !lazyload.enable) {
   return;
 }
 
+const concurrency = lazyload.concurrency || 20;
 const loadingImgPath = lazyload.loadingImg || '/js/lazyload-plugin/loading.svg';
 const thumbPath = lazyload.thumbPath || './images/thumb';
 const thumbTargetFolder = path.resolve(hexo.base_dir, 'public/', thumbPath);
@@ -144,9 +145,10 @@ hexo.extend.filter.register('after_post_render', function (data) {
   return data;
 });
 
-hexo.extend.filter.register('after_generate', async function loopPipe() {
-  log('start processing thumb');
-  return await async.mapLimit(waitForThumb, 5, async function (url) {
+hexo.extend.filter.register('before_exit', async function loopPipe() {
+  if (!waitForThumb.length) { return false; }
+  log('start processing ' + waitForThumb.length +' thumb');
+  return await async.mapLimit(waitForThumb, concurrency, async function (url) {
     const response = await generateThumb(url);
     return response;
   }, (err) => {
@@ -155,4 +157,4 @@ hexo.extend.filter.register('after_generate', async function loopPipe() {
     // console.log('results', results)
     log('All thumb process successed !');
   });
-});
+}, 1);
