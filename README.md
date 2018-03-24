@@ -8,6 +8,7 @@ feature:
 - use IntersectionObserver api(with polyfill if browsers not support) for lazyload
 - medium effect
 
+![](./assert/hexo-lazyload.gif)
 
 ## Getting started
 
@@ -35,7 +36,7 @@ First add configuration in `_config.yml` from your hexo project.
 ```yaml
 lazyload:
   enable: true
-  # thumbPath: './images/thumb'
+  # thumbPath: '/images/thumb'
   # className: #optional e.g. .J-lazyload-img
   # loadingImg: #optional eg. /images/loading.png
 ```

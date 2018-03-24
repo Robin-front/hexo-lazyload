@@ -9,6 +9,8 @@
 - 使用 IntersectionObserver API（自带polyfill）实现 lazyload
 - medium effect
 
+![](./assert/hexo-lazyload.gif)
+
 ## 安装
 
 这个包依赖 `gm` 来生成缩略图，所以请先安装相关依赖 [GraphicsMagick](http://www.graphicsmagick.org/) or [ImageMagick](http://www.imagemagick.org/)。如果是 mac,可以使用以下命令：
