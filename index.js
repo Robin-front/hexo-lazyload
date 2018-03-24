@@ -107,7 +107,7 @@ const gmAsync = async (originPath, targetPath, targetRelativePath) => await new 
           size: {}
         });
       } else {
-        log('gm: ' + originPath + ' generate thumb successed');
+        debug('gm: ' + originPath + ' generate thumb successed');
         resolve({
           originPath,
           targetPath: targetRelativePath,
@@ -139,13 +139,14 @@ const dealWithContent = (html, thumbMap) => {
     const src = $el.attr('src');
     let thumb;
     const hasThumb = thumbMap.some((obj) => {
+      if(obj === undefined) { return false; }
       if(obj.originPath === src) {
         thumb = obj;
         return true;
       }
       return false;
     });
-    if (hasThumb) {
+    if (hasThumb && thumb.size) {
       const { size, targetPath } = thumb;
       $el.attr('class', 'progress-images--original')
         .attr('src', loadingImgPath)
@@ -173,7 +174,7 @@ hexo.extend.filter.register('after_post_render', function (data) {
       if (err) { reject(err) };
       originArray = null;
       resolve(thumbMap);
-      log(data.source + 'All thumb process successed !');
+      debug(data.source + 'All thumb process successed !');
     });
   }).then((thumbMap) => {
     data.content = dealWithContent(data.content, thumbMap);
