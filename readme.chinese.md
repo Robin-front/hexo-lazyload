@@ -34,13 +34,13 @@ $ yarn add hexo-lazyload
 ```yaml
 lazyload:
   enable: true
-  # thumbPath: './images/thumb'
+  # thumbPath: '/images/thumb'
   # className: #可选 e.g. .J-lazyload-img
-  # loadingImg: #可选 eg. ./images/loading.png
+  # loadingImg: #可选 eg. /images/loading.png
 ```
 
 **thumbPath**
-- 缩略图路径（相对 `public/` 路径）
+- 缩略图路径（绝对路径，根目录为 `public/`）
 
 **loadingImg**
 - 默认路径: '/js/lazyload-plugin/loading.svg'

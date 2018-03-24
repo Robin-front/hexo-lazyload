@@ -37,11 +37,11 @@ lazyload:
   enable: true
   # thumbPath: './images/thumb'
   # className: #optional e.g. .J-lazyload-img
-  # loadingImg: #optional eg. ./images/loading.png
+  # loadingImg: #optional eg. /images/loading.png
 ```
 
 **thumbPath**
-- thumb path relative to `public/`, default: `./images/thumb`
+- absolute thumb path ,root dir is `public/`, default: `/images/thumb`
 
 **loadingImg**
 - default: '/js/lazyload-plugin/loading.svg'

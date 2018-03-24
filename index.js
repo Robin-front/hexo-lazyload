@@ -18,8 +18,8 @@ if (!lazyload || !lazyload.enable) {
 
 const concurrency = lazyload.concurrency || 2;
 const loadingImgPath = lazyload.loadingImg || '/js/lazyload-plugin/loading.svg';
-const thumbPath = lazyload.thumbPath || './images/thumb';
-const thumbTargetFolder = path.resolve(hexo.public_dir, thumbPath);
+const thumbPath = lazyload.thumbPath || '/images/thumb';
+const thumbTargetFolder = path.join(hexo.public_dir, thumbPath);
 const assetsList = ['lazyload.intersectionObserver.min.js', 'loading.svg'];
 
 const error = err => hexo.log.error(err);
