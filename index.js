@@ -90,36 +90,55 @@ const generateThumb = async (originPath) => {
   };
 }
 
-const gmAsync = async (originPath, targetPath, targetRelativePath) => await new Promise((resolve, reject) => {
-  let size;
-  gm(getOriginImage(originPath))
-    .size(function(err, result){
-      size = result;
-    })
-    .thumbnail(60, 60)
-    .write(targetPath, function (err, res) {
-      if (err) {
-        error('gm: ' + 'fail to generate thumb of ' + originPath);
-        error(err);
-        reject({
-          originPath,
-          targetPath: targetRelativePath,
-          size: {}
-        });
-      } else {
-        debug('gm: ' + originPath + ' generate thumb successed');
-        resolve({
-          originPath,
-          targetPath: targetRelativePath,
-          size
-        });
-      }
-    });
+const gmAsync = async (originPath, targetPath, targetRelativePath) => await new Promise(async (resolve, reject) => {
+  try {
+    let size;
+    const input = getOriginImage(originPath);
+    let inputRes;
+    if (typeof input == 'function') {
+      inputRes = await input().on('error', () => {
+        throw new Error('request error');
+      });
+    } else {
+      inputRes = input;
+    }
+    gm(inputRes)
+      .size(function (err, result) {
+        if (!err) {
+          size = result;
+        } else {
+          error('size error ' + originPath, err);
+          reject();
+        }
+      })
+      .thumbnail(60, 60)
+      .write(targetPath, function (err, res) {
+        if (err) {
+          error('gm write:fail to generate thumb of '+ originPath, err);
+          reject();
+        } else {
+          debug('gm: ' + originPath + ' generate thumb successed');
+          resolve({
+            originPath,
+            targetPath: targetRelativePath,
+            size
+          });
+        }
+      });
+  } catch (err) {
+    reject();
+  }
 });
 
 const getOriginImage = originPath => {
   if (isRemotePath(originPath)) {
-    return request(originPath);
+    return request({ url: originPath, timeout: 1500 }).on('error', (err) => {
+      if (err.code === 'ETIMEDOUT') {
+        error('request remote img fail because timeout ' + originPath);
+      } else {
+        error('request remote img fail ' + originPath)
+      }
+    });
   } else {
     return path.join(hexo.source_dir, originPath);
   }
@@ -139,8 +158,8 @@ const dealWithContent = (html, thumbMap) => {
     const src = $el.attr('src');
     let thumb;
     const hasThumb = thumbMap.some((obj) => {
-      if(obj === undefined) { return false; }
-      if(obj.originPath === src) {
+      if (obj === undefined) { return false; }
+      if (obj.originPath === src) {
         thumb = obj;
         return true;
       }
@@ -161,33 +180,33 @@ const dealWithContent = (html, thumbMap) => {
   });
   return $.html();
 }
-hexo.extend.filter.register('before_post_render', async function (data) {
-  await mkdir(thumbTargetFolder);
-});
 
-hexo.extend.filter.register('after_post_render', function (data) {
-  return new Promise(resolve => {
-    let originArray = collectImages(data.content);
-    async.mapLimit(originArray, concurrency, async function (url) {
-      return await generateThumb(url);
-    }, (err, thumbMap) => {
-      if (err) { reject(err) };
-      originArray = null;
-      resolve(thumbMap);
-      debug(data.source + 'All thumb process successed !');
+const afterPostRender = data => new Promise(resolve => {
+  let originArray = collectImages(data.content);
+  async.mapLimit(originArray, concurrency, async function (url) {
+    return await generateThumb(url).catch(err => {
+      error('generateThumb fail ' + url);
+      return null;
     });
-  }).then((thumbMap) => {
-    data.content = dealWithContent(data.content, thumbMap);
-
-    return data;
+  }, (err, thumbMap) => {
+    if (err) {
+      error('mapLimit error ', originArray);
+      reject(err);
+    };
+    originArray = null;
+    thumbMap = thumbMap.filter(obj => !!obj);
+    resolve(thumbMap);
+    debug(data.source + 'All thumb process successed !');
   });
+}).then((thumbMap) => {
+  data.content = dealWithContent(data.content, thumbMap);
+  return data;
+}).catch(err => {
+  error('after_post_render error ', err);
+  return data;
 });
 
-hexo.extend.filter.register('before_generate', function (data) {
-  copyAssets();
-});
-
-hexo.extend.filter.register('after_generate', function () {
+const afterGenerate = () => {
   const route = hexo.route;
   var routes = route.list().filter(path => path.endsWith('.html'));
   const map = routes.map(path => {
@@ -198,7 +217,7 @@ hexo.extend.filter.register('after_generate', function () {
       html.on('end', () => {
         const $ = cheerio.load(htmlTxt, { decodeEntities: false });
         $('body').append(`<script type="text/javascript" charset="utf-8" src="/js/lazyload-plugin/lazyload.intersectionObserver.min.js"></script>`);
-        resolve({path, html: $.html()});
+        resolve({ path, html: $.html() });
       });
     });
   });
@@ -208,4 +227,13 @@ hexo.extend.filter.register('after_generate', function () {
       route.set(obj.path, obj.html);
     });
   });
+};
+
+hexo.extend.filter.register('before_post_render', async function (data) {
+  await mkdir(thumbTargetFolder);
 });
+hexo.extend.filter.register('after_post_render', afterPostRender);
+hexo.extend.filter.register('before_generate', function (data) {
+  copyAssets();
+});
+hexo.extend.filter.register('after_generate', afterGenerate);
