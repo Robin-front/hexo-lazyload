@@ -6,7 +6,6 @@
     "version": "3.6.0"
   },
   "dependencies": {
-    "bluebird": "^3.5.1",
     "hexo": "^3.2.0",
     "hexo-all-minifier": "^0.1.1",
     "hexo-deployer-git": "^0.3.1",
