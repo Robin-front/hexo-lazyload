@@ -7,8 +7,7 @@ const cheerio = require("cheerio");
 const mkdirp = require("mkdirp");
 const gm = require("gm");
 const request = require("request");
-
-const QueueMapLimit = require("./queue.js");
+const QueueMaplimit = require("queue-maplimit");
 
 const config = hexo.config;
 const lazyload = config.lazyload;
@@ -186,7 +185,7 @@ const dealWithContent = (html, thumbMap) => {
   return $.html();
 };
 
-const queue = new QueueMapLimit(concurrency);
+const queue = new QueueMaplimit(concurrency);
 const afterPostRender = data =>
   new Promise(resolve => {
     let imgArr = collectImages(data.content);
