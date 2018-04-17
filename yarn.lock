@@ -937,9 +937,9 @@ qs@~6.5.1:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
 
-queue-maplimit@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/queue-maplimit/-/queue-maplimit-0.0.1.tgz#dc4410f98e33161294d22b469cff5cf075fdb454"
+queue-maplimit@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/queue-maplimit/-/queue-maplimit-0.0.2.tgz#ce4dfbf6e22480345dbdbeca5cf86e000eca0a6e"
 
 readable-stream@^2.0.2, readable-stream@^2.2.2:
   version "2.3.3"
