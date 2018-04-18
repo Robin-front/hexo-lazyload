@@ -16,7 +16,7 @@ if (!lazyload || !lazyload.enable) {
   return;
 }
 
-const concurrency = lazyload.concurrency || 10;
+const concurrency = lazyload.concurrency || 5;
 const loadingImgPath = lazyload.loadingImg || "/js/lazyload-plugin/loading.svg";
 const thumbPath = lazyload.thumbPath || "/images/thumb";
 const thumbTargetFolder = path.join(hexo.public_dir, thumbPath);
@@ -106,14 +106,15 @@ const gmAsync = async (originPath, outputPath, targetPath) =>
     try {
       const input = getOriginImage(originPath);
       let size;
-      const timer = setTimeout(() => {
-        typeof input === "object" ? input.abort() : null;
-        reject();
-      }, 10000);
+      // if (typeof input === "object") {
+      //   setTimeout(() => {
+      //     input.abort();
+      //     reject();
+      //   }, 10000);
+      // }
       gm(input)
         .size(function(err, result) {
           if (err) {
-            clearTimeout(timer);
             reject(err);
           } else {
             size = result;
@@ -121,7 +122,6 @@ const gmAsync = async (originPath, outputPath, targetPath) =>
         })
         .thumbnail(60, 60)
         .write(outputPath, function(err, res) {
-          clearTimeout(timer);
           if (err) {
             reject(err);
           } else {
@@ -135,7 +135,7 @@ const gmAsync = async (originPath, outputPath, targetPath) =>
 
 const getOriginImage = originPath => {
   if (isRemotePath(originPath)) {
-    return request({ url: originPath, timeout: 1500 }).on("error", err => {
+    return request({ url: originPath, timeout: 5000 }).on("error", err => {
       if (err.code === "ETIMEDOUT") {
         warn("request remote img fail because timeout " + originPath);
       } else {

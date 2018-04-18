@@ -116,8 +116,8 @@ aws-sign2@~0.7.0:
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"
 
 aws4@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.7.0.tgz#d4d0e9b9dbfca77bf08eeb0a8a471550fe39e289"
 
 babel-code-frame@^6.22.0:
   version "6.26.0"
@@ -937,9 +937,9 @@ qs@~6.5.1:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
 
-queue-maplimit@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/queue-maplimit/-/queue-maplimit-0.0.2.tgz#ce4dfbf6e22480345dbdbeca5cf86e000eca0a6e"
+queue-maplimit@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/queue-maplimit/-/queue-maplimit-0.0.3.tgz#ecf37ee2981208fd70c1d8631809dae1e4501824"
 
 readable-stream@^2.0.2, readable-stream@^2.2.2:
   version "2.3.3"
